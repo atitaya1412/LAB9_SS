@@ -1,0 +1,58 @@
+*** Settings ***
+Library     SeleniumLibrary    timeout=5
+
+***Variable***
+${USER_ID}   #admin
+${USER_PASS}  
+${BROWSER}    Firefox
+${ID_CS}    CS
+${CREATE_FIRST_STATE}    xpath://a[@href="/workflows/workflow_templates/${ID_CS}/states/create/"]
+${CREATE_NEXT_STATE}    xpath://a[@href="/workflows/workflow_templates/${ID_CS}/states/create/"]
+${URL_BROWSER}    http://localhost/#/workflows/workflow_templates/${ID_CS}/states/
+
+
+***Test_Case***
+
+Create State#1
+	Set Selenium Speed    0.5
+    Open Browser    ${URL_BROWSER}   ${BROWSER}
+    Login admin
+    Wait Until Element Is Visible  id:menu-actions
+    Click Element    xpath=//*[@id="menu-actions"]
+    Wait Until Element Is Visible  ${CREATE_FIRST_STATE}
+    Click Link    ${CREATE_FIRST_STATE}
+    Select Checkbox    name:initial
+    Input Text    id_label    
+    Click Element    id:id_start_datetime_0
+    Create Invalid State Test
+    Wait Until Element Contains    xpath://div[@class="alert alert-danger"] 
+    [Teardown]  Close Browser
+    
+    Create State#1
+	Set Selenium Speed    0.5
+    Open Browser    ${URL_BROWSER}   ${BROWSER}
+    Login admin
+    Wait Until Element Is Visible  id:menu-actions
+    Click Element    xpath=//*[@id="menu-actions"]
+    Wait Until Element Is Visible  ${CREATE_NEXT_STATE}
+    Click Link    ${CREATE_NEXT_STATE}
+    Select Checkbox    name:initial
+    Input Text    id_label    
+    Click Element    id:id_start_datetime_0
+    Create Invalid State Test
+    Wait Until Element Contains    xpath://div[@class="alert alert-danger"] 
+    [Teardown]  Close Browser
+
+
+
+
+ ***Keyword***
+Login admin
+	Input Text    username    ${VALID USERNAME}
+	Input Text    password    ${VALID PASSWORD}
+    Click Button    submit
+	Location Should Contain    ${HOME PAGE}
+	
+
+
+

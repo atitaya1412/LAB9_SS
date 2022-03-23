@@ -1,0 +1,85 @@
+*** Settings ***
+Library    SeleniumLibrary
+
+*** Variables ***
+${BROWSER}    Firefox
+${SERVER}    localhost
+${USERNAME}    
+${PASSWORD}   
+${ID_st}    4
+${ID_sd}    8
+${LABEL1}  
+${LOGIN PAGE}    http://${SERVER}/authentication/login/?next=/home/
+${HOME PAGE}    http://localhost/#/home/
+${WORKFLOWS DOCUMENTS PAGE}    http://localhost/#/workflows/workflow_runtime_proxies/${ID_st}/documents/
+${WORKFLOWS DOCUMENTS INSIDE}    http://localhost/#/documents/documents/${ID_sd}/preview/
+${WORKFLOWS DOCUMENT TYPES}    http://localhost/#/workflows/workflow_templates/${ID_sd}/document_types/
+${WORKFLOWS TEMPLATE PAGE}    http://localhost/#/workflows/workflow_templates/
+${DOCUMENT UPLOAD PAGE}    http://localhost/#/sources/documents/create/from/local/multiple/
+${PREVIEW WORKFLOWS PAGE}    http://localhost/#/workflows/workflow_templates/${ID_st}/preview/
+${WORKFLOWS DOCUMENTS TRANSITIONS}    http://localhost/#/workflows/documents/${ID_sd}/workflows/
+${WORKFLOWS DOCUMENTS SELECT TRANSITIONS}    http://localhost/#/workflows/documents/workflows/${ID_sd}/transitions/select/
+${DOCUMENT TYPES PAGE}    http://localhost/#/documents/document_types/
+${DOCUMENT TYPES CREATE}    http://localhost/#/documents/document_types/create/
+${CREATE WORKFLOWS PAGE}    http://localhost/#/workflows/workflow_templates/create/
+${WORKFLOWS STATES PAGE}    http://localhost/#/workflows/workflow_runtime_proxies/${ID_st}/states/
+
+
+**Test_Case***
+Add Document
+    Set Selenium Speed    0.5
+    Open Login Page
+    Login To Home Page
+    Wait Until Element Is Visible    xpath://a[@aria-controls="collapse-documents"]
+    Double Click Element    xpath://a[@aria-controls="collapse-documents"]
+    Wait Until Element Is Visible    xpath://a[@href="/sources/documents/create/from/local/multiple/"]
+    Double Click Element    xpath://a[@href="/sources/documents/create/from/local/multiple/"]
+    Location Should Be    ${DOCUMENT UPLOAD PAGE}
+    Wait Until Element Is Visible    xpath://span[@class="select2-selection select2-selection--single"]
+    Click Element    xpath://span[@class="select2-selection select2-selection--single"]
+    Wait Until Element Is Visible    xpath://li[contains(text(), "${LABEL1}")]
+    Click Element    xpath://li[contains(text(), "${LABEL1}")]
+    Wait Until Element Is Visible    xpath://button[@class="btn btn-primary btn-hotkey-default"]
+    Click Button    xpath://button[@class="btn btn-primary btn-hotkey-default"]
+    Wait Until Element Is Visible    xpath://button[@class="dz-button"]
+    Click Element    xpath://button[@class="dz-button"]
+    Wait Until Element Contains    xpath://div[@class="toast-message"] 
+    
+Go To Workflow Document Page
+    Wait Until Element Is Visible    xpath://a[@aria-controls="collapse-workflows"]
+    Double Click Element    xpath://a[@aria-controls="collapse-workflows"]
+    Wait Until Element Is Visible    xpath://a[@href="/workflows/workflow_runtime_proxies/"]
+    Double Click Element    xpath://a[@href="/workflows/workflow_runtime_proxies/"]
+    Wait Until Element Is Visible    xpath://a[@href="/workflows/workflow_runtime_proxies/${ID1}/documents/"]
+    Click Element    xpath://a[@href="/workflows/workflow_runtime_proxies/${ID_st}/documents/"]
+    Wait Until Element Is Visible    xpath://a[@href="/documents/documents/${ID_sd}/preview/"]
+    Click Element    xpath://a[@href="/documents/documents/${ID_sd}/preview/"]
+    Wait Until Element Is Visible    xpath://a[@href="/workflows/documents/${ID_sd}/workflows/"]
+    Click Element    xpath://a[@href="/workflows/documents/${ID_sd}/workflows/"]
+    Wait Until Element Is Visible    xpath://a[contains(text(),"Transition")]
+    Click Element    xpath://a[contains(text(),"Transition")]
+
+Choose Transitions
+    Wait Until Element Is Visible    xpath=//select[@id="id_transition"]
+    Click Element    xpath=//select[@id="id_transition"]
+    Select From List By Index    xpath=//select[@id="id_transition"]    1
+    Click Button    submit
+    Wait Until Element Is Visible    xpath=//textarea[@name="comment"]
+    Click Element    xpath=//textarea[@name="comment"]
+    Wait Until Element Is Visible    xpath://button[@class="btn btn-primary btn-hotkey-default"]
+    Click Button    xpath://button[@class="btn btn-primary btn-hotkey-default"]
+    [Teardown]  Close Browse
+
+
+
+***Keyword***
+
+Open Login Page
+	Open Browser    ${LOGIN PAGE}    ${BROWSER}
+	Location Should Be    ${LOGIN PAGE}
+
+Login To Home Page
+	Input Text    username    ${USERNAME}
+	Input Text    password    ${PASSWORD}
+    Click Button    submit
+	Location Should Contain    ${HOME PAGE}   

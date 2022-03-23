@@ -1,0 +1,52 @@
+***Setting***
+Library    SeleniumLibrary    timeout=3
+
+***Variable***
+${USER_ID}    
+${USER_PASS} 
+${SERVER}    localhost
+${BROWSER}    Firefox
+${LOGIN PAGE}    http://${SERVER}/authentication/login/?next=/home/
+${HOME PAGE}    http://localhost/#/home/
+${WORKFLOW_MENU}    xpath://a[@aria-controls="collapse-workflows"]
+${WORKFLOWS PAGE}    http://localhost/#/workflows/workflow_templates/
+${CREATE_WORKFLOW}    xpath://a[@href="/workflows/workflow_templates/create/"]
+${CREATE WORKFLOWS PAGE}    http://localhost/#/workflows/workflow_templates/create/
+${DELAY}    0.5
+
+***Test_Case***
+
+Create Workflow #1
+    Set Delay
+    Open Browser    ${HOME PAGE}   ${BROWSER}
+    Login 
+    Wait Until Element Is Visible  ${WORKFLOW_MENU}
+    Double Click Element    ${WORKFLOW_MENU}
+    Wait Until Element Is Visible    ${CREATE_WORKFLOW}
+    Double Click Element    ${CREATE_WORKFLOW}
+    Wait Until Element Is Visible  ${CREATE_WORKFLOW}
+    Input date Workflow Test
+    Wait Until Element Contains    xpath://div[@class="alert alert-danger"]          
+    [Teardown]  Close Browser
+    
+    *** Keywords ***
+Set Delay
+    Set Selenium Speed    ${DELAY}
+    
+Login
+    Wait Until Element Is Visible  class:panel-body
+    Input Text    id_username    ${USER_ID}
+    Input Text    id_password    ${USER_PASS}
+    Click Button    class:btn-primary
+    
+Input date Workflow Test
+    Input Text    id_label    
+    Input Text    id_internal_name    w1
+    Log    Typing text
+    Press Keys    //input[@name="start_datetime_0"]   
+    Press Keys    //input[@name="start_datetime_1"]    
+    Set Focus To Element    //button[@name="submit"]
+    Press Keys    //input[@name="end_datetime_0"]  
+    Press Keys    //input[@name="end_datetime_1"]   
+    Log    Text entered
+    Click Button    submit

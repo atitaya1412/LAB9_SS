@@ -1,0 +1,55 @@
+*** Settings ***
+Library     SeleniumLibrary    timeout=5
+
+***Variable***
+${USER_ID}   
+${USER_PASS}  
+${BROWSER}    Firefox
+${SERVER}    localhost${ID_CS}    CS
+${CREATE_FIRST_STATE}    xpath://a[@href="/workflows/workflow_templates/${ID_CS}/states/create/"]
+${CREATE_NEXT_STATE}    xpath://a[@href="/workflows/workflow_templates/${ID_CS}/states/create/"]
+${URL_BROWSER}    http://localhost/#/workflows/workflow_templates/${ID_CS}/states/
+${LOGIN PAGE}    http://${SERVER}/authentication/login/?next=/home/
+${HOME PAGE}    http://localhost/#/home/
+${WORKFLOWS PAGE}    http://localhost/#/workflows/workflow_runtime_proxies/
+${PREVIEW WORKFLOWS PAGE}    http://localhost/#/workflows/workflow_templates/${ID_CS}/preview/
+${CREATE WORKFLOWS PAGE}    http://localhost/#/workflows/workflow_templates/create/
+${EDIT WORKFLOWS PAGE}    http://localhost/#/workflows/workflow_templates/${ID3}/edit
+${WORKFLOWS STATES PAGE}    http://localhost/#/workflows/workflow_runtime_proxies/${ID_CS}/states/
+${WORKFLOWS DOCUMENTS PAGE}    http://localhost/#/workflows/workflow_runtime_proxies/${ID_CS}/documents/
+${WORKFLOWS TEMPLATES}      http://localhost/#/workflows/workflow_templates/    
+${DELAY}    0.5
+
+
+***Test_Case***
+
+Login Page
+    Set Selenium Speed  ${DELAY}
+	Open Browser    ${LOGIN PAGE}    ${BROWSER}
+	Location  ${LOGIN PAGE}
+
+Login To Home Page
+	Input Text    username    ${VALID USERNAME}
+	Input Text    password    ${VALID PASSWORD}
+    Click Button    submit
+	Location  ${HOME PAGE}    
+
+Go To Workflows Page
+	Wait Until Element Is Visible    xpath://a[@aria-controls="collapse-workflows"]
+	Double Click Element    xpath://a[@aria-controls="collapse-workflows"]
+	Wait Until Element Is Visible    xpath://a[@href="/workflows/workflow_runtime_proxies/"]
+	Double Click Element    xpath://a[@href="/workflows/workflow_runtime_proxies/"]
+	Location Should Contain    ${WORKFLOWS PAGE}    	
+	
+ Go to Workflow Edit
+    Wait Until Element Is Visible    xpath://a[@href="/workflows/workflow_templates/${ID3}/edit/"]
+    Click Link    xpath://a[@href="/workflows/workflow_templates/${ID3}/edit/"]
+    Location Should Contain    ${EDIT WORKFLOWS PAGE}
+    Input Text    id_label    
+    Input Text    id_internal_name    mamafucka
+    Click Button    submit
+    #Click Button    class:btn btn-primary btn-hotkey-default
+    Location Should Contain    ${WORKFLOWS TEMPLATES}	
+    
+
+

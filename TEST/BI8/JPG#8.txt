@@ -1,0 +1,32 @@
+*** Settings ***
+Library    SeleniumLibrary
+
+*** Variables ***
+${USERNAME}    
+${PASSWORD}   
+${DOCUMENT UPLOAD PAGE}    http://localhost/#/sources/documents/create/from/local/multiple/
+
+**Test_Case***
+Add Document
+    Set Selenium Speed    0.5
+	Open Browser    ${LOGIN PAGE}    ${BROWSER}
+	Location Should Be    ${LOGIN PAGE}
+      Input Text    username    ${USERNAME}
+	Input Text    password    ${PASSWORD}
+    Click Button    submit
+	Location Should Contain    ${HOME PAGE}
+    Wait Until Element Is Visible    xpath://a[@aria-controls="collapse-documents"]
+    Double Click Element    xpath://a[@aria-controls="collapse-documents"]
+    Wait Until Element Is Visible    xpath://a[@href="/sources/documents/create/from/local/multiple/"]
+    Double Click Element    xpath://a[@href="/sources/documents/create/from/local/multiple/"]
+    Location Should Be    ${DOCUMENT UPLOAD PAGE}
+    Upload File JPG xpath://input[@file=".jpg"]
+    Wait Until Element Is Visible    xpath://span[@class="select2-selection select2-selection--single"]
+    Click Element    xpath://span[@class="select2-selection select2-selection--single"]
+    Wait Until Element Is Visible    xpath://li[contains(text(), "${LABEL1}")]
+    Click Element    xpath://li[contains(text(), "${LABEL1}")]
+    Wait Until Element Is Visible    xpath://button[@class="btn btn-primary btn-hotkey-default"]
+    Click Button    xpath://button[@class="btn btn-primary btn-hotkey-default"]
+    Wait Until Element Is Visible    xpath://button[@class="dz-button"]
+    Click Element    xpath://button[@class="dz-button"]
+    Wait Until Element Contains    xpath://div[@class="toast-message"] 

@@ -1,0 +1,62 @@
+*** Settings ***
+Library     SeleniumLibrary    timeout=5
+
+***Variable***
+${USER_ID}   #admin
+${USER_PASS}  
+${BROWSER}    Firefox
+${ID_CS}    CS
+${CREATE_FIRST_STATE}    xpath://a[@href="/workflows/workflow_templates/${ID_CS}/states/create/"]
+${CREATE_NEXT_STATE}    xpath://a[@href="/workflows/workflow_templates/${ID_CS}/states/create/"]
+${URL_BROWSER}    http://localhost/#/workflows/workflow_templates/${ID_CS}/states/
+
+
+***Test_Case***
+Create Transitions#1
+    Set Selenium Speed    0.5
+    Open Browser    ${STATE}   ${BROWSER}
+    Login admin
+    Wait Until Element Is Visible  id:sidebar
+    Click Link    ${TRANSITION}
+    Wait Until Element Is Visible  id:menu-actions
+    Click Element    xpath=//*[@id="menu-actions"]
+    Wait Until Element Is Visible  ${CREATE_FIRST_TRANSITION}
+    Click Link    ${CREATE_FIRST_TRANSITION}
+    Wait Until Element Is Visible  id:id_label
+    Input Text    id_label  
+    Click Element    xpath=//select[@id="id_origin_state"]
+    Select From List by Index    xpath=//select[@id="id_origin_state"]    1
+    Select From List by Index  xpath=//select[@name="destination_state"]    2
+    Click Button    submit
+    Location Should Contain    ${LOCATION_TRANSITION}
+    Element Text Should Be    xpath://div[@class="toast-message"]  
+    [Teardown]  Close Browser
+
+
+Create Transitions#1
+    Set Selenium Speed    0.5
+    Open Browser    ${STATE}   ${BROWSER}
+    Login admin
+    Wait Until Element Is Visible  id:sidebar
+    Click Link    ${TRANSITION}
+    Wait Until Element Is Visible  id:menu-actions
+    Click Element    xpath=//*[@id="menu-actions"]
+    Wait Until Element Is Visible  ${CREATE_NEXT_TRANSITION}
+    Click Link    ${CREATE_NEXT_TRANSITION}
+    Wait Until Element Is Visible  id:id_label
+    Input Text    id_label    
+    Click Element    xpath=//select[@id="id_origin_state"]
+    Select From List by Index    xpath=//select[@id="id_origin_state"]    2
+    Select From List by Index  xpath=//select[@name="destination_state"]    1
+    Click Button    submit
+    Location Should Contain    ${LOCATION_TRANSITION}
+    Element Text Should Be    xpath://div[@class="toast-message"]  
+    [Teardown]  Close Browser
+
+
+**Keyword***
+Login admin
+	Input Text    username    ${VALID USERNAME}
+	Input Text    password    ${VALID PASSWORD}
+    Click Button    submit
+	Location Should Contain    ${HOME PAGE}
