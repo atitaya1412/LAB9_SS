@@ -1,0 +1,46 @@
+***Setting***
+Library    SeleniumLibrary
+
+***Variable***
+${BROWSER}    Firefox
+${SERVER}    localhost
+${ID_f}    9
+${ID_n}    16
+${USERNAME_CS}
+${USERNAME_IT} 
+${PASSWORD_CS}    
+${LOGIN PAGE}    http://${SERVER}/authentication/login/?next=/home/
+${HOME PAGE}    http://localhost/#/home/
+${WORKFLOWS PAGE}    http://localhost/#/workflows/workflow_runtime_proxies/
+${PREVIEW WORKFLOWS PAGE}    http://localhost/#/workflows/workflow_templates/${ID_f}/preview/
+${CREATE WORKFLOWS PAGE}    http://localhost/#/workflows/workflow_templates/create/
+
+*** Test Cases ***
+Edit Workflow
+    Set Selenium Speed    0.4
+    Open Browser    ${LOGIN PAGE}    ${BROWSER}
+	Location Should Be    ${LOGIN PAGE}
+	Input Text    username    ${USERNAME_CS}
+	Input Text    password    ${PASSWORD_CS}
+    Click Button    submit
+	Location Should Contain    ${HOME PAGE}
+	Wait Until Element Is Visible    xpath://a[@aria-controls="collapse-workflows"]  
+    Click Link    xpath://a[@aria-controls="collapse-workflows"]
+    Wait Until Element Is Visible    xpath://a[@href="/workflows/workflow_runtime_proxies/"]
+    Click Link    xpath://a[@href="/workflows/workflow_runtime_proxies/"]
+    Location Should Contain    ${WORKFLOWS PAGE}
+    Wait Until Element Is Visible    xpath://a[@href="/workflows/workflow_templates/${ID_f}/preview/"]
+	Click Link    xpath://a[@href="/workflows/workflow_templates/${ID_f}/preview/"]
+	Location Should Contain    ${PREVIEW WORKFLOWS PAGE}
+    Wait Until Element Is Visible    id:menu-actions
+    Click Element    xpath=//*[@id="menu-actions"]
+    Wait Until Element Is Visible    xpath://a[@href="/workflows/workflow_templates/"]
+    Click Link    xpath://a[@href="/workflows/workflow_templates/"]
+    Location Should Contain  http://localhost/#/workflows/workflow_templates/
+    Wait Until Element Is Visible    xpath://a[@href="/workflows/workflow_templates/${ID_f}/edit/"]
+    Click Element    xpath://a[@href="/workflows/workflow_templates/${ID_f}/edit/"]
+    Location Should Contain    http://localhost/#/workflows/workflow_templates/${ID_f}/edit/
+    Input Text    id_label    mamafucka
+    Click Button    submit
+    Location Should Contain    http://localhost/#/workflows/workflow_templates/   
+    [Teardown]  Close Browser
